@@ -29,7 +29,7 @@ python scripts/export_html.py --output ../观澜_研究雷达_20261023盘后.htm
 
 `python scripts/refresh_daily.py` 会在临时目录更新四个来源、合并五个市场、重新计算因子并校验，再替换正式快照。默认使用最近收盘工作日及前 120 个自然日的历史窗口。已发布的相同或更早日期不会重复抓取。上期所目标日文件返回 404 时记录 `no-published-report`，保留旧快照；不将这一状态直接解释为休市。其他下载失败、错日、混合合约、DCE 部分品种失败或交易所覆盖下降超过 20% 均阻止发布。席位缺失仍明确留空，不能保证数据源每天可用。
 
-每次成功更新提交 `dist/data.json`，Git 历史保存旧快照。Actions 的构建产物提供可下载的 `guanlan.html`（保留 30 天），在线版本也可从 `guanlan.html` 下载。下载到电脑的 HTML 是固定快照，不会自行更新；在线网址显示最新发布版本。
+每次成功更新提交 `dist/data.json`，Git 历史保存旧快照。同一合约在窗口内已验证的历史记录若因下载失败而丢失，会阻止发布。首次运行从 `source-cache` Release 载入已验证的上期所官方历史文件，再读取当天报告；后续使用 Actions 缓存，历史不填充、不插值。Actions 的构建产物提供可下载的 `guanlan.html`（保留 30 天），在线版本也可从 `guanlan.html` 下载。下载到电脑的 HTML 是固定快照，不会自行更新；在线网址显示最新发布版本。
 
 新仓库默认分支使用 `main`。在 Settings → Pages 选择 **GitHub Actions**，并设置仓库变量 `ENABLE_GITHUB_PAGES=true` 后，同一工作流会将 `dist/` 发布到 Pages。未启用该变量时只更新仓库与离线构建，不公开网页。公开仓库不包含 `.openai/`、原始缓存、账号凭据或本地截图；公开内容为本站代码、公开来源加工数据及说明。
 

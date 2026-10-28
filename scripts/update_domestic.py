@@ -24,7 +24,16 @@ def fetch(kind,day):
     try:
         if path.exists(): raw=path.read_bytes()
         else:
-            with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'GuanlanResearch/1.0'}),timeout=18) as r: raw=r.read()
+            for attempt in range(3):
+                try:
+                    with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Referer':'https://www.shfe.com.cn/'}),timeout=18) as r: raw=r.read()
+                    break
+                except urllib.error.HTTPError as exc:
+                    if exc.code==404 or attempt==2: raise
+                    time.sleep(1+attempt)
+                except OSError:
+                    if attempt==2: raise
+                    time.sleep(1+attempt)
         doc=json.loads(raw)
         if doc.get('report_date')!=ymd: return {'date':day.isoformat(),'error':'date mismatch','url':url}
         rows=doc.get('o_curinstrument' if kind=='kx' else 'o_cursor',[])

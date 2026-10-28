@@ -42,10 +42,17 @@ jobs:
           cache: pip
       - run: python -m pip install -r requirements.txt
       - uses: actions/cache/restore@v4
+        id: raw_cache
         with:
           path: data/raw
-          key: commodity-raw-v1-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: commodity-raw-v1-
+          key: commodity-raw-v2-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: commodity-raw-v2-
+      - name: Bootstrap validated official history on cache miss
+        if: steps.raw_cache.outputs.cache-matched-key == ''
+        run: |
+          if curl --fail --location --retry 2 --max-time 90 -o "$RUNNER_TEMP/shfe-source-cache.zip" "https://github.com/$GITHUB_REPOSITORY/releases/download/source-cache/shfe-source-cache.zip"; then
+            python scripts/restore_source_cache.py "$RUNNER_TEMP/shfe-source-cache.zip"
+          fi
       - name: Verify research arithmetic and refresh transaction
         run: |
           python scripts/check_analysis.py
@@ -67,7 +74,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: data/raw
-          key: commodity-raw-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          key: commodity-raw-v2-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Build offline HTML
         run: python scripts/export_html.py --output dist/guanlan.html
       - name: Commit the complete snapshot

@@ -18,8 +18,9 @@ def snapshot(day='2026-10-23'):
     markets = []
     for ex in sorted(daily.EXCHANGES):
         bar = {'date': day, 'contract': ex.lower() + '2701', 'close': 100}
+        history = ([{**bar, 'date':'2026-10-23'}] if day>'2026-10-23' else []) + [dict(bar)]
         markets.append({'code': ex.lower(), 'exchange': ex, 'main': bar,
-                        'history': [dict(bar)], 'ranks': [], 'analysis': {},
+                        'history': history, 'ranks': [], 'analysis': {},
                         'quoteSource': {'date': day, 'url': 'https://example.com/public'}})
     return {'schema': 'domestic-v1', 'asOf': day, 'markets': markets,
             'exchangeSources': [{'date': day, 'exchange': ex} for ex in sorted(daily.EXCHANGES)]}
@@ -66,6 +67,15 @@ class PublicationTests(unittest.TestCase):
         with patch.object(daily, 'run_script', side_effect=RuntimeError('export failed')):
             with self.assertRaisesRegex(RuntimeError, 'export failed'):
                 self.refresh(builder=self.build)
+        self.assertEqual(self.published.read_bytes(), self.original)
+
+    def test_history_download_loss_keeps_published_snapshot(self):
+        def lose_history(*args):
+            candidate = self.build(*args)
+            candidate['markets'][0]['history'] = candidate['markets'][0]['history'][-1:]
+            return candidate
+        with self.assertRaisesRegex(ValueError, 'previously validated'):
+            self.refresh(builder=lose_history)
         self.assertEqual(self.published.read_bytes(), self.original)
 
     def test_mixed_exchange_dates_are_rejected(self):

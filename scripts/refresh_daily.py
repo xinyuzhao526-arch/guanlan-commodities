@@ -57,7 +57,7 @@ def official_report_available(day, cache):
         time.sleep(2 * (attempt + 1))
 
 
-def validate_snapshot(data, day, previous=None):
+def validate_snapshot(data, day, previous=None, history_start=None):
     """Fail closed on mixed dates, corrupted bars, or a large coverage regression."""
     if data.get('schema') != 'domestic-v1' or data.get('asOf') != day:
         raise ValueError('Snapshot schema/date mismatch.')
@@ -73,6 +73,8 @@ def validate_snapshot(data, day, previous=None):
         for ex, n in prior_counts.items():
             if counts[ex] < math.ceil(n * .8):
                 raise ValueError(f'{ex} coverage fell from {n} to {counts[ex]}; review required.')
+    previous_markets = {m['code']: m for m in previous['markets']} if previous else {}
+    history_start = history_start or (dt.date.fromisoformat(day) - dt.timedelta(days=120)).isoformat()
     for m in markets:
         main, bars = m['main'], m['history']
         if main['date'] != day or not bars or bars[-1]['date'] != day:
@@ -80,6 +82,12 @@ def validate_snapshot(data, day, previous=None):
         dates = [b['date'] for b in bars]
         if dates != sorted(set(dates)):
             raise ValueError(f"{m['code']}: duplicate/unsorted historical dates.")
+        prior = previous_markets.get(m['code'])
+        if prior and prior['main']['contract'].lower() == main['contract'].lower():
+            known_dates = {b['date'] for b in prior['history'] if history_start <= b['date'] <= day}
+            missing_known = known_dates - set(dates)
+            if missing_known:
+                raise ValueError(f"{m['code']}: lost {len(missing_known)} previously validated historical observations.")
         for bar in bars:
             if bar['date'] > day or bar['contract'].lower() != main['contract'].lower():
                 raise ValueError(f"{m['code']}: future or mixed-contract observation.")
@@ -107,6 +115,7 @@ def run_script(stage, name, *args):
 
 
 def build_candidate(stage, day, start, run=run_script):
+    run(stage, 'probe_sources.py', '--as-of', day)
     for script, extra in [
         ('update_domestic.py', []), ('source_czce.py', []),
         ('source_dce.py', ['--refresh', '--skip-official-probe']), ('source_gfex.py', [])
@@ -139,7 +148,7 @@ def refresh(root, day, start, *, rebuild=False, preflight=official_report_availa
             shutil.copytree(cached, stage / 'data/raw')
         try:
             candidate = builder(stage, day, start)
-            counts = validate_snapshot(candidate, day, previous)
+            counts = validate_snapshot(candidate, day, previous, start)
             # A failed exporter also must leave the published data intact.
             run_script(stage, 'export_html.py', '--output', str(stage / 'dist/guanlan.html'))
             (root / 'data').mkdir(exist_ok=True)
