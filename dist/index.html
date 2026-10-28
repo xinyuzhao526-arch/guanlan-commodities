@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-density="compact">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="观澜研究雷达：趋势、量价持仓、席位证据与跨品种比较。"><title>观澜 · 研究雷达</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<aside class="sidebar">
+ <a class="brand" href="#research"><span class="brand-icon">GL<span></span></span><span class="brand-name">观澜<span class="brand-sub">COMMODITIES RESEARCH</span></span></a>
+ <div class="nav-caption">WORKSPACE <span>01</span></div>
+ <nav aria-label="主导航"><a href="#research" data-view="research"><span class="nav-icon">◎</span><span class="nav-label">研究雷达</span><span class="nav-no">01</span></a><a href="#overview" data-view="overview"><span class="nav-icon">◫</span><span class="nav-label">市场概览</span><span class="nav-no">02</span></a><a href="#trends" data-view="trends"><span class="nav-icon">↗</span><span class="nav-label">趋势全景</span><span class="nav-no">03</span></a><a href="#positions" data-view="positions"><span class="nav-icon">▥</span><span class="nav-label">持仓结构</span><span class="nav-no">04</span></a><a href="#sources" data-view="sources"><span class="nav-icon">⊞</span><span class="nav-label">数据与方法</span><span class="nav-no">05</span></a></nav>
+ <div class="sidebar-note"><span class="pulse"></span><span>盘后研究工作台</span><div>SHFE / INE / DCE<br>CZCE / GFEX</div></div>
+ <div class="sidebar-bottom"><div class="side-snapshot"><span>DATA SNAPSHOT</span><strong id="side-date">—</strong><small>固定时点 · 来源可追溯</small></div><a href="#sources">计算口径与数据来源 <span>↗</span></a></div>
+</aside>
+<div class="workspace">
+ <header class="topbar"><div class="top-location"><button class="icon-button" id="nav-toggle" aria-label="收起侧边导航" title="收起侧边导航">☰</button><span class="mobile-brand">观澜</span><span class="workspace-label">商品研究</span><span class="slash">/</span><span id="breadcrumb">研究雷达</span></div><div class="top-actions"><button id="command-open" class="command-trigger" aria-label="搜索品种"><span>⌕</span><span>搜索品种、合约</span><kbd>Ctrl K</kbd></button><span class="data-label" id="terminal-date">盘后快照</span><button class="tool-button" id="density-toggle" title="切换信息密度">紧凑</button><button class="tool-button" id="theme-toggle" aria-label="切换为浅色主题">浅色</button><a href="#research" class="radar-entry" aria-label="打开研究雷达">研究雷达 ↗</a></div></header>
+ <div class="market-ribbon" id="market-ribbon" aria-label="重点品种收盘快照"></div>
+ <main id="app" aria-live="polite"><div class="loading"><span class="brand-icon">≋</span><p>正在载入交易所数据…</p></div></main>
+ <footer><span>GUANLAN / RESEARCH TERMINAL</span><span>收盘快照 · 透明规则 · 仅供研究参考</span><a class="offline-download" href="guanlan.html" download="观澜_研究终端.html">下载离线 HTML ↗</a><a href="#sources">数据来源与方法 ↗</a></footer>
+</div>
+<div id="command-menu" class="command-overlay" hidden><section class="command-dialog" role="dialog" aria-modal="true" aria-label="搜索商品"><div class="command-input-row"><span>⌕</span><input id="command-input" type="search" placeholder="搜索商品名称或合约代码…" autocomplete="off" aria-label="搜索商品名称或合约代码"><button id="command-close" class="icon-button" aria-label="关闭搜索">×</button></div><div class="command-results" id="command-results" role="listbox" aria-label="搜索结果"></div><div class="command-help"><span>↑ ↓ 选择　↵ 查看证据</span><span>ESC 关闭</span></div></section></div>
+<div id="toast" role="status"></div><script type="module" src="app.js"></script>
+</body></html>

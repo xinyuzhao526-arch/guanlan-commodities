@@ -1,0 +1,13 @@
+data/
+data-raw-*.json
+shfe-*.json
+__pycache__/
+*.tar.gz
+*.tar
+.qa/
+.openai/
+.refresh-*/
+.refresh-status.json
+dist/guanlan.html
+.venv/
+*.log
