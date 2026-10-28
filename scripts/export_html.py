@@ -23,7 +23,7 @@ html = html.replace('<script type="module" src="app.js"></script>', '<script id=
 assert 'fetch(' not in html and '@import' not in html
 assert 'src="app.js"' not in html and 'href="style.css"' not in html
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--output', type=pathlib.Path, default=ROOT.parent / '观澜_境内商品研究.html')
+parser.add_argument('--output', type=pathlib.Path, default=ROOT.parent / '商品研究终端.html')
 out = parser.parse_args().output.resolve()
 out.write_text(html, encoding='utf-8')
 print(json.dumps({'file': str(out), 'bytes': out.stat().st_size, 'asOf': data['asOf'], 'markets': len(data['markets'])}, ensure_ascii=False))

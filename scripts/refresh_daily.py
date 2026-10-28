@@ -174,7 +174,7 @@ def report(result):
             out.write(f"changed={str(result.get('changed', False)).lower()}\nas_of={result.get('asOf', '')}\n")
     if os.environ.get('GITHUB_STEP_SUMMARY'):
         with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as out:
-            out.write(f"### 观澜盘后更新\n\n状态：`{result['status']}`\n\n最新完整快照：**{result.get('asOf', '未改变')}**\n\n")
+            out.write(f"### 商品研究终端盘后更新\n\n状态：`{result['status']}`\n\n最新完整快照：**{result.get('asOf', '未改变')}**\n\n")
             if result['status'] == 'no-published-report':
                 out.write('目标日期尚无可读取的上期所正式报告（可能休市或尚未发布）；保留上一份快照。\n')
 

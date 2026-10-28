@@ -1,4 +1,4 @@
-# 观澜 · 境内商品研究
+# 商品研究终端 · 境内商品研究
 
 [在线研究终端](https://xinyuzhao526-arch.github.io/guanlan-commodities/) · [下载离线 HTML](https://xinyuzhao526-arch.github.io/guanlan-commodities/guanlan.html) · [每日更新记录](https://github.com/xinyuzhao526-arch/guanlan-commodities/actions)。离线文件内嵌数据、样式和脚本，双击即可打开；在线版由下述工作流更新。实际行情日期以页面显示为准。
 
@@ -18,7 +18,7 @@ python scripts/source_gfex.py --as-of 2026-10-23 --start 2026-07-14
 python scripts/merge_exchanges.py
 python scripts/analyze_markets.py
 python scripts/export_html.py
-python scripts/export_html.py --output ../观澜_研究雷达_20261023盘后.html
+python scripts/export_html.py --output ../商品研究终端_研究雷达_20261023盘后.html
 ```
 
 以上命令可复现原始快照；切换日期时所有来源的 `--as-of` 必须一致，并使用对应历史窗口。原始数据缓存于 `data/raw/`，独立来源包位于 `data/*-markets.json`。合并校验报告日期、同合约历史、涨跌基准、来源和重复品种。

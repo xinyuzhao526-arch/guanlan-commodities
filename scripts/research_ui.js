@@ -59,6 +59,6 @@ function bindResearch(){
 function exportResearch(){
  const heads=['日期','品种','合约','交易所','5日收盘收益%','20日收盘收益%','20日收益分位','可比样本数','5日同合约持仓变化%','当日同合约持仓变化_手','当日价仓象限','20日量比','20日年化波动%','ATR14_价格单位','MA20_五日变化%','收盘乖离MA20%','席位样本差_手','席位样本差占合约OI%','多空增减项差_手','买单前5占买单样本%','卖单前5占卖单样本%','证据状态','支持观察','反向观察','未知项','行情来源'];
  const rows=DATA.markets.map(m=>{const a=m.analysis;return [DATA.asOf,m.name,m.main.contract,m.exchange,a.return5,a.return20,a.strengthPercentile20,a.strengthPeerCount,a.oiReturn5,a.fixedOiChange,a.quadrant,a.volumeRatio20,a.volatility20,a.atr14,a.ma20Slope5,a.deviation20,a.seatDifference,a.seatDifferencePctOi,a.seatDeltaDifference,a.seatLongTop5Share,a.seatShortTop5Share,a.status,a.evidence.join('；'),a.counterEvidence.join('；'),a.unknowns.join('；'),sourceOf(m).url]});
- const csv='\ufeff'+[heads,...rows].map(row=>row.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=`观澜_研究因子与证据_${DATA.asOf}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('已导出72个品种的研究因子、证据和来源');
+ const csv='\ufeff'+[heads,...rows].map(row=>row.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=`商品研究终端_研究因子与证据_${DATA.asOf}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('已导出72个品种的研究因子、证据和来源');
 }
 // END RESEARCH UI
